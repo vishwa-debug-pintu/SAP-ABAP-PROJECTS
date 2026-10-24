@@ -1,38 +1,37 @@
-Sales Order Management Report
+# Sales Order Management Report
 
-Overview
-An SAP ABAP Program that will display details about Sales Order Headers and Items.
+## Project Overview
 
-Features
-The ability to select Sales Orders using SELECT-OPTIONS.
-An INNER JOIN has been used to display Sales Order and Item Details.
-Displaying Sales order number, date created, order type, item number, material, quantity and net price.
-Using LOOP AT to display records. A classical output has been implemented.
-Headers have been displayed using TOP-OF-PAGE.
-A footer has been implemented using END-OF-PAGE.
+An SAP ABAP program that displays sales order header and item details.
 
-SAP Systems Used
-SAP ECC 6.0
-ABAP Workbench (SE38)
+## Features
 
-SAP Tables Used
-VBAK – Sales Document Header Data
-VBAP – Sales Document Item Data
+- Select sales orders using SELECT-OPTIONS.
+- Use INNER JOIN to retrieve sales order and item details.
+- Display sales order number, creation date, order type, item number, material, quantity, and net price.
+- Use LOOP AT to display records.
+- Display headings using TOP-OF-PAGE.
+- Display a footer using END-OF-PAGE.
 
-ABAP Concepts Used
-SELECT-OPTIONS
-TYPES
-DATA
-Open SQL SELECT
-INNER JOIN
-Internal tables and Work Areas
-SY-SUBRC
-WRITE
-TOP-OF-PAGE
-END-OF-PAGE
+## SAP Environment
 
-Program Name
-Z_SALES_ORDER_REPORT
+- SAP ECC 6.0
+- ABAP Workbench (SE38)
 
-Note:
-This project was just to understand how to build a classical ABAP report. Please test your program in SAP before running it with business data.
+## SAP Tables
+
+- VBAK — Sales Document Header Data
+- VBAP — Sales Document Item Data
+
+## ABAP Concepts
+
+- SELECT-OPTIONS
+- TYPES and DATA
+- Open SQL and INNER JOIN
+- Internal tables and work areas
+- SY-SUBRC and WRITE
+- TOP-OF-PAGE and END-OF-PAGE
+
+## Program Name
+
+`Z_SALES_ORDER_REPORT`
