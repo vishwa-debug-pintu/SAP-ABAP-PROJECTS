@@ -1,0 +1,103 @@
+
+REPORT Z_ALV_SALES_ANALYTICS.
+
+TYPE-POOLS: SLIS.
+
+TABLES: VBAK.
+
+SELECT-OPTIONS: S_VBELN FOR VBAK-VBELN.
+
+START-OF-SELECTION.
+
+  SELECT VBELN,
+         ERDAT,
+         AUART,
+         VKORG,
+         VTWEG,
+         SPART,
+         KUNNR
+    FROM VBAK
+    INTO TABLE @DATA(IT_VBAK)
+    WHERE VBELN IN @S_VBELN.
+
+
+  IF IT_VBAK IS INITIAL.
+    WRITE: / 'No sales orders found.'.
+  ELSE.
+    PERFORM DISPLAY_ALV.
+  ENDIF.
+
+
+FORM DISPLAY_ALV.
+
+  DATA: LT_FCAT TYPE SLIS_T_FIELDCAT_ALV,
+        WS_FCAT TYPE SLIS_FIELDCAT_ALV.
+
+* FIELD CATALOG
+* Defines the columns, headings, and visual emphasis of the ALV grid.
+
+
+
+  WS_FCAT-FIELDNAME = 'VBELN'.
+  WS_FCAT-COL_POS = '1'.
+  WS_FCAT-SELTEXT_M = 'Sales Order'.
+  WS_FCAT-EMPHASIZE = 'C410'.
+  APPEND WS_FCAT TO LT_FCAT.
+  CLEAR WS_FCAT.
+
+  WS_FCAT-FIELDNAME = 'ERDAT'.
+  WS_FCAT-COL_POS = '2'.
+  WS_FCAT-SELTEXT_M = 'Created Date'.
+  WS_FCAT-edit = 'x'.
+  APPEND WS_FCAT TO LT_FCAT.
+  CLEAR WS_FCAT.
+
+  WS_FCAT-FIELDNAME = 'AUART'.
+  WS_FCAT-COL_POS = '3'.
+  WS_FCAT-SELTEXT_M = 'Order Type'.
+  WS_FCAT-EMPHASIZE = 'C310'.
+  APPEND WS_FCAT TO LT_FCAT.
+  CLEAR WS_FCAT.
+
+  WS_FCAT-FIELDNAME = 'VKORG'.
+  WS_FCAT-COL_POS = '4'.
+  WS_FCAT-SELTEXT_M = 'Sales Org'.
+  APPEND WS_FCAT TO LT_FCAT.
+  CLEAR WS_FCAT.
+
+  WS_FCAT-FIELDNAME = 'VTWEG'.
+  WS_FCAT-COL_POS = '5'.
+  WS_FCAT-SELTEXT_M = 'Distribution Channel'.
+  APPEND WS_FCAT TO LT_FCAT.
+  CLEAR WS_FCAT.
+
+  WS_FCAT-FIELDNAME = 'SPART'.
+  WS_FCAT-COL_POS = '6'.
+  WS_FCAT-SELTEXT_M = 'Division'.
+  APPEND WS_FCAT TO LT_FCAT.
+
+  CLEAR WS_FCAT.
+  WS_FCAT-FIELDNAME = 'KUNNR'.
+  WS_FCAT-COL_POS = '7'.
+  WS_FCAT-SELTEXT_M = 'Customer'.
+  APPEND WS_FCAT TO LT_FCAT.
+
+* ALV DISPLAY
+* Pass the field catalog and internal table to the ALV function module.
+
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      I_CALLBACK_PROGRAM = SY-REPID
+      IT_FIELDCAT        = LT_FCAT
+    TABLES
+      T_OUTTAB           = IT_VBAK
+    EXCEPTIONS
+      PROGRAM_ERROR      = 1
+      OTHERS             = 2.
+
+
+  IF SY-SUBRC <> 0.
+    MESSAGE 'Error displaying ALV report' TYPE 'I'.
+  ENDIF.
+
+ENDFORM.'
