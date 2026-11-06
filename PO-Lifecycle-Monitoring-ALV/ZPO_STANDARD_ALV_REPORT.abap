@@ -1,0 +1,152 @@
+REPORT ZPO_STANDARD_ALV.
+TYPE-POOLS: SLIS.
+TABLES EKKO.
+
+SELECT-OPTIONS S_EBELN FOR EKKO-EBELN.
+
+
+TYPES: BEGIN OF TY_TAB,
+         EBELN TYPE EKKO-EBELN,
+         LIFNR TYPE EKKO-LIFNR,
+         BEDAT TYPE EKKO-BEDAT,
+         NAME1 TYPE LFA1-NAME1,
+         EBELP TYPE EKPO-EBELP,
+         MATNR TYPE EKPO-MATNR,
+         MENGE TYPE EKPO-MENGE,
+         NETPR TYPE EKPO-NETPR,
+
+       END OF TY_TAB.
+*Internal Tables and Work Areas
+
+DATA: IT_TABLE TYPE TABLE OF TY_TAB,
+      WA_TABLE TYPE TY_TAB.
+
+*//////////////////////////////
+DATA: IT_FCAT TYPE SLIS_T_FIELDCAT_ALV,
+      WA_FCAT TYPE SLIS_FIELDCAT_ALV.
+
+* Main Processing
+
+START-OF-SELECTION.
+  SELECT  A~EBELN,
+    A~LIFNR,
+    A~BEDAT,
+    C~NAME1,
+    B~EBELP,
+    B~MATNR,
+    B~MENGE,
+    B~NETPR FROM EKKO AS A
+    INNER JOIN EKPO AS B
+    ON A~EBELN = B~EBELN
+    INNER JOIN LFA1 AS C
+    ON A~LIFNR = C~LIFNR
+    INTO TABLE @IT_TABLE
+    WHERE A~EBELN IN @S_EBELN.
+
+* Build Field Catalog 
+
+  WA_FCAT-FIELDNAME = 'EBELN'.
+  WA_FCAT-COL_POS = 1.
+  WA_FCAT-SELTEXT_M = 'PO NUMBER'.
+  WA_FCAT-EMPHASIZE = 'C401'.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME = 'BEDAT'.
+  WA_FCAT-COL_POS   = 2.
+  WA_FCAT-SELTEXT_M = 'Document Date'.
+
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME = 'LIFNR'.
+  WA_FCAT-COL_POS   = 3.
+  WA_FCAT-SELTEXT_M = 'Vendor Number'.
+
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME  = 'NAME1'.
+  WA_FCAT-COL_POS   = 4.
+  WA_FCAT-SELTEXT_M = 'Vendor Name'.
+  WA_FCAT-EMPHASIZE = 'C310'.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME  = 'ELBELP'.
+  WA_FCAT-COL_POS   = 5.
+  WA_FCAT-SELTEXT_M = 'ITEM NUMBER'.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME  = 'MATNR'.
+  WA_FCAT-COL_POS   = 6.
+  WA_FCAT-SELTEXT_M = 'MATERIAL '.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME  = 'MANGE'.
+  WA_FCAT-COL_POS   = 7.
+  WA_FCAT-SELTEXT_M = 'QUANTITY'.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+  WA_FCAT-FIELDNAME  = 'NETPR'.
+  WA_FCAT-COL_POS   = 8.
+  WA_FCAT-SELTEXT_M = 'NET PRICE'.
+  APPEND WA_FCAT TO IT_FCAT.
+  CLEAR WA_FCAT.
+
+* Display ALV Grid
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+*     I_INTERFACE_CHECK  = ' '
+*     I_BYPASSING_BUFFER = ' '
+*     I_BUFFER_ACTIVE    = ' '
+      I_CALLBACK_PROGRAM = SY-REPID
+*     I_CALLBACK_PF_STATUS_SET          = ' '
+*     I_CALLBACK_USER_COMMAND           = ' '
+*     I_CALLBACK_TOP_OF_PAGE            = ' '
+*     I_CALLBACK_HTML_TOP_OF_PAGE       = ' '
+*     I_CALLBACK_HTML_END_OF_LIST       = ' '
+*     I_STRUCTURE_NAME   =
+*     I_BACKGROUND_ID    = ' '
+      I_GRID_TITLE       = 'Purchase Order Monitoring'
+*     I_GRID_SETTINGS    =
+*     IS_LAYOUT          =
+      IT_FIELDCAT        = IT_FCAT
+*     IT_EXCLUDING       =
+*     IT_SPECIAL_GROUPS  =
+*     IT_SORT            =
+*     IT_FILTER          =
+*     IS_SEL_HIDE        =
+*     I_DEFAULT          = 'X'
+*     I_SAVE             = ' '
+*     IS_VARIANT         =
+*     IT_EVENTS          =
+*     IT_EVENT_EXIT      =
+*     IS_PRINT           =
+*     IS_REPREP_ID       =
+*     I_SCREEN_START_COLUMN             = 0
+*     I_SCREEN_START_LINE               = 0
+*     I_SCREEN_END_COLUMN               = 0
+*     I_SCREEN_END_LINE  = 0
+*     I_HTML_HEIGHT_TOP  = 0
+*     I_HTML_HEIGHT_END  = 0
+*     IT_ALV_GRAPHICS    =
+*     IT_HYPERLINK       =
+*     IT_ADD_FIELDCAT    =
+*     IT_EXCEPT_QINFO    =
+*     IR_SALV_FULLSCREEN_ADAPTER        =
+* IMPORTING
+*     E_EXIT_CAUSED_BY_CALLER           =
+*     ES_EXIT_CAUSED_BY_USER            =
+    TABLES
+      T_OUTTAB           = IT_TABLE.
+* EXCEPTIONS
+*   PROGRAM_ERROR                     = 1
+*   OTHERS                            = 2
+  .
+  IF SY-SUBRC <> 0.
+* Implement suitable error handling here
+  ENDIF.
