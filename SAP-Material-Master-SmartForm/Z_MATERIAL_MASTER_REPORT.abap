@@ -1,6 +1,6 @@
 REPORT ZSDR_PROJECT.
-tables mara.
-select-OPTIONS s_matnr for mara-matnr .
+tables vbak.
+select-OPTIONS s_vbeln for mara-matnr .
 
 CALL FUNCTION '/1BCDWB/SF00000282'
 * EXPORTING
@@ -18,7 +18,7 @@ CALL FUNCTION '/1BCDWB/SF00000282'
 *   JOB_OUTPUT_INFO            =
 *   JOB_OUTPUT_OPTIONS         =
   TABLES
-    IS_MATNR                   = s_matnr
+    IS_MATNR                   = s_vbeln
 * EXCEPTIONS
 *   FORMATTING_ERROR           = 1
 *   INTERNAL_ERROR             = 2
