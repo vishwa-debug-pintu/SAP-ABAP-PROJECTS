@@ -39,20 +39,12 @@ ZF_FORM_5/
 ZF_FORM_5.xml
 README.md
  images/
- smartform-output.png
- smartform.png
--output.png
+ smartform-output.png\
 
 
 ## Screenshots
 
-### 1. Smart Form Layout
-![Smart Form Layout](images/smartform-layout.png)
-
-### 2. Table Configuration
-![Smart Form Table Configuration](images/smartform-table.png)
-
-### 3. Smart Form Output
+### 1. Smart Form Output
 ![Smart Form Output](images/smartform-output.png)
 
 ## Learning Outcomes
